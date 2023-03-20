@@ -1,9 +1,6 @@
 import numpy as np
 
-
-X_LIM = (0, 300)
-Y_LIM = (0, 300)
-POINTS_NO = 30
+import utils
 
 
 def gen_points(x_lim, y_lim, count):
@@ -14,4 +11,5 @@ def gen_points(x_lim, y_lim, count):
 
 
 if __name__ == "__main__":
-    print((gen_points(X_LIM, Y_LIM, POINTS_NO)[0]))
+    utils.set_seeds()
+    print((gen_points(utils.X_LIM, utils.Y_LIM, utils.POINTS_NO)[0]))

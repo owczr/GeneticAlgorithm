@@ -18,3 +18,10 @@ def distance(point_1, point_2):
 
     return math.sqrt((x_1 - x_2) ** 2 + (y_1 - y_2) ** 2)
 
+
+def plot(ax, x_lim, y_lim, point_tuples):
+    ax.set_xlim(*x_lim)
+    ax.set_ylim(*y_lim)
+    x, y = zip(*point_tuples)
+    ax.scatter(x, y)
+

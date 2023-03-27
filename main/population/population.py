@@ -38,14 +38,26 @@ def calculate_distance(population_list, points_list):
     return distance_list
 
 
-def select_elite(distance_list, population_list):
-    for distance in distance_list:
-        print(sum(distance))
+def select_elite(distance_list, population_list, method="rank"):
+    if method == "rank":
+        rank = select_by_rank(distance_list)
+        return rank
+    if method == "roulette":
+        select_by_roulette(distance_list, population_list)
+    else:
+        raise NameError(f"Method {method} not supported")
 
 
-def select_by_rank():
-    pass
+def select_by_rank(distance_list):
+    distance_list_sorted = sorted(distance_list, key=sum)
+    rank_list = []
+    for rank, distances in enumerate(reversed(distance_list_sorted)):
+        rank_list.append(rank)
+    rank_list_reversed = list(reversed(rank_list))
+    rank_list_std = np.array(rank_list_reversed) / max(rank_list_reversed)
+
+    return rank_list_std
 
 
-def select_by_roulette():
+def select_by_roulette(distance_list, population_list):
     pass

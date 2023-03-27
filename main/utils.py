@@ -7,7 +7,9 @@ X_LIM = (0, 300)
 Y_LIM = (0, 300)
 POINTS_NO = 30
 SEED = 42
-POP_SIZE = 1000
+POPULATION_SIZE = 1000
+MUTATION_PROBA = 0
+
 
 def set_seeds():
     random.seed(SEED)

@@ -28,9 +28,24 @@ def distance(point_1, point_2):
 
 
 def calculate_distance(population_list, points_list):
+    distance_list = []
     for population in population_list:
         points_new = points_list[population]
-        distance_list = [distance(p1, p2) for p1, p2 in zip(points_new[:-1], points_new[1:])]
-        distance_list = distance_list + [distance(points_new[-1], points_new[0])]
+        distances = [distance(p1, p2) for p1, p2 in zip(points_new[:-1], points_new[1:])]
+        distances = distances + [distance(points_new[-1], points_new[0])]
+        distance_list.append(distances)
 
-        return distance_list
+    return distance_list
+
+
+def select_elite(distance_list, population_list):
+    for distance in distance_list:
+        print(sum(distance))
+
+
+def select_by_rank():
+    pass
+
+
+def select_by_roulette():
+    pass

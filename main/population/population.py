@@ -1,6 +1,11 @@
 import math
 
 import numpy as np
+from scipy.stats import rankdata
+from sklearn.preprocessing import MinMaxScaler
+
+from .element import Element
+
 
 # TODO: Generate new population
 # TODO: Calculate distances
@@ -13,12 +18,7 @@ import numpy as np
 # TODO: Visualization
 
 
-def generate_first(population_size, points_count):
-    perm_list = [np.random.permutation(points_count) for _ in range(population_size)]
-    return perm_list
-
-
-def distance(point_1, point_2):
+def _distance(point_1, point_2):
     x_1 = point_1[0]
     y_1 = point_1[1]
     x_2 = point_2[0]
@@ -27,37 +27,86 @@ def distance(point_1, point_2):
     return math.sqrt((x_1 - x_2) ** 2 + (y_1 - y_2) ** 2)
 
 
-def calculate_distance(population_list, points_list):
-    distance_list = []
-    for population in population_list:
-        points_new = points_list[population]
-        distances = [distance(p1, p2) for p1, p2 in zip(points_new[:-1], points_new[1:])]
-        distances = distances + [distance(points_new[-1], points_new[0])]
-        distance_list.append(distances)
+class Population:
+    def __init__(self, population_size, points_count, points):
+        self.__elements = self.__generate_first(population_size, points_count)
+        self.__points = points
 
-    return distance_list
+    @property
+    def elements(self):
+        return self.__elements
 
+    @elements.setter
+    def elements(self, elements):
+        self.__elements = elements
 
-def select_elite(distance_list, population_list, method="rank"):
-    if method == "rank":
-        rank = select_by_rank(distance_list)
-        return rank
-    if method == "roulette":
-        select_by_roulette(distance_list, population_list)
-    else:
-        raise NameError(f"Method {method} not supported")
+    @elements.getter
+    def elements(self):
+        return self.__elements
 
+    @elements.deleter
+    def elements(self):
+        del self.__elements
 
-def select_by_rank(distance_list):
-    distance_list_sorted = sorted(distance_list, key=sum)
-    rank_list = []
-    for rank, distances in enumerate(reversed(distance_list_sorted)):
-        rank_list.append(rank)
-    rank_list_reversed = list(reversed(rank_list))
-    rank_list_std = np.array(rank_list_reversed) / max(rank_list_reversed)
+    @classmethod
+    def __generate_first(cls, population_size: int, points_count: int) -> list:
+        elements = [Element(np.random.permutation(points_count)) for _ in range(population_size)]
+        return elements
 
-    return rank_list_std
+    @classmethod
+    def generate_population(cls, probabilities, population_list):
+        pass
 
+    @property
+    def points(self):
+        return self.__points
 
-def select_by_roulette(distance_list, population_list):
-    pass
+    @points.setter
+    def points(self, points):
+        self.__points = points
+
+    @points.getter
+    def points(self):
+        return self.__points
+
+    @points.deleter
+    def points(self):
+        del self.__points
+
+    def calculate_distances(self):
+        # distance_list = []
+        for element in self.elements:
+            points_new = self.points[element.permutations]
+            distances = [_distance(p1, p2) for p1, p2 in zip(points_new[:-1], points_new[1:])]
+            distances = distances + [_distance(points_new[-1], points_new[0])]
+            element.distance = sum(distances)
+        #     distance_list.append(distances)
+        #
+        # return distance_list
+
+    def select_elite(self, method="rank"):
+        if method == "rank":
+            # TODO: With ranks setted select elite and generate new population
+            self.__select_by_rank()
+        elif method == "roulette":
+            self.__select_by_roulette()
+        else:
+            raise NameError(f"Method {method} not supported")
+
+    def __select_by_rank(self):
+        distances = [element.distance for element in self.elements]
+        ranks = rankdata(distances)
+
+        scaler = MinMaxScaler(feature_range=(0, 1))
+        ranks_std = scaler.fit_transform(np.array(ranks).reshape(-1, 1))
+
+        self.__set_ranks(ranks_std)
+
+    def __select_by_roulette(self):
+        pass
+
+    def __set_ranks(self, ranks):
+        for element, rank in zip(self.elements, ranks):
+            element.rank = rank
+            print(element.distance, element.rank)
+

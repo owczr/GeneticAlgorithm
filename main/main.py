@@ -25,3 +25,5 @@ if __name__ == "__main__":
     # points.plot(axs, utils.X_LIM, utils.Y_LIM, points_list)
     #
     # plt.show()
+
+#%%

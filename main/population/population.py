@@ -30,6 +30,7 @@ def _distance(point_1, point_2):
 class Population:
     def __init__(self, population_size, points_count, points):
         self.__elements = self.__generate_first(population_size, points_count)
+        self.__size = population_size
         self.__points = points
 
     @property
@@ -74,19 +75,15 @@ class Population:
         del self.__points
 
     def calculate_distances(self):
-        # distance_list = []
         for element in self.elements:
             points_new = self.points[element.permutations]
             distances = [_distance(p1, p2) for p1, p2 in zip(points_new[:-1], points_new[1:])]
             distances = distances + [_distance(points_new[-1], points_new[0])]
             element.distance = sum(distances)
-        #     distance_list.append(distances)
-        #
-        # return distance_list
 
     def select_elite(self, method="rank"):
+        self.__set_ranks()
         if method == "rank":
-            # TODO: With ranks setted select elite and generate new population
             self.__select_by_rank()
         elif method == "roulette":
             self.__select_by_roulette()
@@ -94,19 +91,23 @@ class Population:
             raise NameError(f"Method {method} not supported")
 
     def __select_by_rank(self):
-        distances = [element.distance for element in self.elements]
-        ranks = rankdata(distances)
-
-        scaler = MinMaxScaler(feature_range=(0, 1))
-        ranks_std = scaler.fit_transform(np.array(ranks).reshape(-1, 1))
-
-        self.__set_ranks(ranks_std)
+        index = 0
+        for probability in np.random.random(self.__size):
+            if probability > self.elements[index].rank:
+                del self.elements[index]
+                index = index - 1
+            index = index + 1
 
     def __select_by_roulette(self):
         pass
 
-    def __set_ranks(self, ranks):
-        for element, rank in zip(self.elements, ranks):
+    def __set_ranks(self):
+        distances = [element.distance for element in self.elements]
+        ranks = len(distances) - rankdata(distances)
+
+        scaler = MinMaxScaler(feature_range=(0, 1))
+        ranks_std = scaler.fit_transform(np.array(ranks).reshape(-1, 1))
+
+        for element, rank in zip(self.elements, ranks_std):
             element.rank = rank
-            print(element.distance, element.rank)
 

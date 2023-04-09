@@ -7,6 +7,9 @@ class Element:
         self.__distance = None
         self.__rank = None
 
+    def __len__(self):
+        return len(self.permutations)
+
     @property
     def permutations(self):
         return self.__permutations

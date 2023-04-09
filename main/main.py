@@ -16,6 +16,8 @@ if __name__ == "__main__":
 
     population.select_elite()
 
+    population.crossover()
+
     # for prob, dist, pop in zip(probabilities, distance_list, population):
     #     print(prob, sum(dist), pop)
 

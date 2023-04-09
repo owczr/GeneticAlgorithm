@@ -32,6 +32,7 @@ class Population:
         self.__elements = self.__generate_first(population_size, points_count)
         self.__size = population_size
         self.__points = points
+        self.__points_count = points_count
 
     @property
     def elements(self):
@@ -111,3 +112,22 @@ class Population:
         for element, rank in zip(self.elements, ranks_std):
             element.rank = rank
 
+    @staticmethod
+    def __crossover(first_parent, second_parent, point):
+        first_child = np.concatenate((first_parent[point:], second_parent[:point]))
+        second_child = np.concatenate((second_parent[point:], first_parent[:point]))
+        return first_child, second_child
+
+    def crossover(self, keep_parents=True, two_point=False):
+        element_lenght = len(self.elements[0])
+        crossover_point = np.random.randint(0, element_lenght)
+        first_parent_indexes = np.random.randint(0, len(self.elements), element_lenght)
+        second_parent_indexes = np.random.randint(0, len(self.elements), element_lenght)
+
+        children = []
+        for first, second in zip(first_parent_indexes, second_parent_indexes):
+            children.append(self.__crossover(self.elements[first].permutations,
+                                             self.elements[second].permutations,
+                                             crossover_point))
+
+        return children

@@ -28,13 +28,12 @@ def _distance(point_1, point_2):
 
 
 class Population:
-    mutation_probability = 0.01
-
     def __init__(self, elements, points_count, points):
         self.__elements = elements
         self.__size = len(elements)
         self.__points = points
         self.__points_count = points_count
+        self.__mutation_probability = 0.01
         # Indexes of parent population created during selection
         self.__first_parents = None
         self.__second_parents = None
@@ -80,6 +79,22 @@ class Population:
     @points.deleter
     def points(self):
         del self.__points
+
+    @property
+    def mutation_probability(self):
+        return self.__mutation_probability
+
+    @mutation_probability.setter
+    def mutation_probability(self, mutation_probability):
+        self.__mutation_probability = mutation_probability
+
+    @mutation_probability.getter
+    def mutation_probability(self):
+        return self.__mutation_probability
+
+    @mutation_probability.deleter
+    def mutation_probability(self):
+        del self.__mutation_probability
 
     def calculate_distances(self):
         for element in self.elements:

@@ -4,14 +4,28 @@ import matplotlib.pyplot as plt
 
 import utils
 from points import points
+from population.population import Population
 
 
 if __name__ == "__main__":
     utils.set_seeds()
-    points_list = points.generate(utils.X_LIM, utils.Y_LIM, utils.POINTS_NO)
+    points = points.generate(utils.X_LIM, utils.Y_LIM, utils.POINTS_NO)
 
-    fig, axs = plt.subplots(1, 1)
+    population = Population(10, utils.POINTS_NO, points)
+    population.calculate_distances()
 
-    points.plot(axs, utils.X_LIM, utils.Y_LIM, points_list)
+    population.select_elite()
 
-    plt.show()
+    population.crossover()
+
+    # for prob, dist, pop in zip(probabilities, distance_list, population):
+    #     print(prob, sum(dist), pop)
+
+    #
+    # fig, axs = plt.subplots(1, 1)
+    #
+    # points.plot(axs, utils.X_LIM, utils.Y_LIM, points_list)
+    #
+    # plt.show()
+
+#%%

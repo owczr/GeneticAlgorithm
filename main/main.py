@@ -16,7 +16,7 @@ def main():
     population.calculate_distances()
 
     # Select best elements
-    population.select_elite()
+    population.select_elite("roulette")
 
     # Create children elements
     children_permutations = population.crossover(keep_parents=True)
@@ -27,6 +27,8 @@ def main():
 
     # Mutate elements
     population.mutate()
+
+    print(len(population.elements))
 
     # for prob, dist, pop in zip(probabilities, distance_list, population):
     #     print(prob, sum(dist), pop)

@@ -89,19 +89,21 @@ class Population:
             element.distance = sum(distances)
 
     def select_elite(self, method="rank", limit=None):
-        self.__set_ranks()
         if method == "rank":
-            self.__select_by_rank()
+            self.__set_ranks(feature_range=(0, 1))
+            self.__selection()
         elif method == "roulette":
-            self.__select_by_roulette()
+            # Since ranks are between 0 and 1 we increase the lowest rank,
+            # so that the worse elements have a chance for a crossover,
+            # and we don't delete any element
+            self.__set_ranks(feature_range=(0.1, 1))
         else:
             raise NameError(f"Method {method} not supported")
 
         self.__create_parent_indexes(limit)
 
-    def __select_by_rank(self):
-        """Selection by rank.
-         Here the rank is the probability of transitioning to the paren population"""
+    def __selection(self):
+        """Here the rank is the probability of transitioning to the parent population"""
         index = 0
         for probability in np.random.random(self.__size):
             if probability > self.elements[index].rank:
@@ -109,14 +111,12 @@ class Population:
                 index = index - 1
             index = index + 1
 
-    def __select_by_roulette(self):
-        pass
-
-    def __set_ranks(self):
+    def __set_ranks(self, feature_range):
+        """Sets ranks between feature range"""
         distances = [element.distance for element in self.elements]
         ranks = len(distances) - rankdata(distances)
 
-        min_max_scaler = MinMaxScaler()
+        min_max_scaler = MinMaxScaler(feature_range=feature_range)
         ranks_norm = min_max_scaler.fit_transform(np.array(ranks).reshape(-1, 1))
 
         for element, rank in zip(self.elements, ranks_norm):

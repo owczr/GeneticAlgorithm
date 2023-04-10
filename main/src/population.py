@@ -108,12 +108,11 @@ class Population:
 
     def __selection(self):
         """Here the rank is the probability of transitioning to the parent population"""
-        index = 0
-        for probability in np.random.random(self.__size):
-            if probability > self.elements[index].rank:
-                del self.elements[index]
-                index = index - 1
-            index = index + 1
+        new_elements = []
+        for probability, element in zip(np.random.random(self.__size), self.elements):
+            if probability <= element.rank:
+                new_elements.append(element)
+        self.elements = new_elements
 
     def __set_ranks(self, feature_range):
         """Sets ranks between feature range"""
@@ -162,9 +161,17 @@ class Population:
 
         return first_child, second_child
 
+    @staticmethod
+    def __has_duplicates(child):
+        if len(child) != len(set(child)):
+            return True
+        else:
+            return False
+
     def mutate(self):
         size = self.__points_count
         mutation_probabilities = [self.mutation_probability] * size
+
         for index in range(len(self.elements)):
             mutation = np.random.random(size)
             mask = mutation < mutation_probabilities
@@ -186,7 +193,6 @@ class Population:
             first_child, second_child = crossover_function(self.elements[first].chromosomes,
                                                            self.elements[second].chromosomes,
                                                            crossover_point)
-
             children.append(first_child)
             children.append(second_child)
 
@@ -200,3 +206,17 @@ class Population:
     def best_distance(self):
         distances = [element.distance for element in self.elements]
         return sorted(distances)[0]
+
+    def best_chromosome(self):
+        best_distance = self.best_distance()
+        for element in self.elements:
+            if element.distance == best_distance:
+                return element.chromosomes
+
+    def drop_duplicates(self):
+        new_elements = []
+        for chromosome in self.elements:
+            if not self.__has_duplicates(chromosome.chromosomes):
+                new_elements.append(chromosome)
+        self.elements = new_elements
+

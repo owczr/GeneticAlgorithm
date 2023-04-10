@@ -108,12 +108,11 @@ class Population:
 
     def __selection(self):
         """Here the rank is the probability of transitioning to the parent population"""
-        index = 0
-        for probability in np.random.random(self.__size):
-            if probability > self.elements[index].rank:
-                del self.elements[index]
-                index -= 1
-            index += 1
+        new_elements = []
+        for probability, element in zip(np.random.random(self.__size), self.elements):
+            if probability <= element.rank:
+                new_elements.append(element)
+        self.elements = new_elements
 
     def __set_ranks(self, feature_range):
         """Sets ranks between feature range"""

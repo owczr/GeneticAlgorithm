@@ -19,6 +19,10 @@ def run():
     population = Population(initial_population, POINTS_NO, points, minimal_mutation_probability)
 
     while True:
+        # Drop elements with duplicates
+        population.drop_duplicates()
+        print(len(population.elements))
+
         # Calculate distances
         population.calculate_distances()
 
@@ -29,6 +33,7 @@ def run():
         # Get the best chromosomes
         best_chromosome = population.best_chromosome()
         best_chromosomes.append(best_chromosome)
+        print(best_distance)
 
         # Check for improvement
         # If none increase mutation
@@ -61,6 +66,7 @@ def increase_mutation(population, best_distances, minimal_mutation_probability, 
 
     if all(np.array(last_distances) == last_distances[0]):
         mutation_probability *= strength
+        print(f"Increasing {mutation_probability}")
     else:
         decreased_mutation_probability = mutation_probability / strength
 

@@ -60,12 +60,6 @@ class Element:
         del self.__rank
 
     def mutate(self, mask):
-        mutation_minimum = min(self.chromosomes)
-        mutation_maximum = max(self.chromosomes)
-        mutation_size = len(self.chromosomes)
-
-        mutation_values = np.random.randint(low=mutation_minimum,
-                                            high=mutation_maximum,
-                                            size=mutation_size)
-
-        self.chromosomes[mask] = mutation_values[mask]
+        chromosomes_to_mutate = self.chromosomes[mask]
+        chromosomes_mutated = np.random.permutation(chromosomes_to_mutate)
+        self.chromosomes[mask] = chromosomes_mutated

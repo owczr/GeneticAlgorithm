@@ -29,12 +29,12 @@ def _distance(point_1, point_2):
 
 class Population:
     def __init__(self, elements, points_count, points):
-        # self.__elements = self.__generate_first(population_size, points_count)
         self.__elements = elements
         self.__size = len(elements)
         self.__points = points
         self.__points_count = points_count
-        self.__first_parents = None  # Indexes of parent population created during selection
+        # Indexes of parent population created during selection
+        self.__first_parents = None
         self.__second_parents = None
 
     @property
@@ -156,13 +156,13 @@ class Population:
         return first_child, second_child
 
     def crossover(self, keep_parents=False, two_point=False):
-        element_lenght = len(self.elements[0])
+        element_length = len(self.elements[0])
 
         if two_point:
-            crossover_point = sorted(np.random.randint(1, element_lenght, 2))
+            crossover_point = sorted(np.random.randint(1, element_length, 2))
             crossover_function = self.__two_point_crossover
         else:
-            crossover_point = np.random.randint(1, element_lenght)
+            crossover_point = np.random.randint(1, element_length)
             crossover_function = self.__one_point_crossover
 
         children = []

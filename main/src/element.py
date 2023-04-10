@@ -4,28 +4,28 @@ import numpy as np
 
 class Element:
     def __init__(self, permutations):
-        self.__permutations = permutations
+        self.__chromosomes = permutations
         self.__distance = None
         self.__rank = None
 
     def __len__(self):
-        return len(self.permutations)
+        return len(self.chromosomes)
 
     @property
-    def permutations(self):
-        return self.__permutations
+    def chromosomes(self):
+        return self.__chromosomes
 
-    @permutations.setter
-    def permutations(self, permutations):
-        self.__permutations = permutations
+    @chromosomes.setter
+    def chromosomes(self, permutations):
+        self.__chromosomes = permutations
 
-    @permutations.getter
-    def permutations(self):
-        return self.__permutations
+    @chromosomes.getter
+    def chromosomes(self):
+        return self.__chromosomes
 
-    @permutations.deleter
-    def permutations(self):
-        del self.__permutations
+    @chromosomes.deleter
+    def chromosomes(self):
+        del self.__chromosomes
 
     @property
     def distance(self):
@@ -60,12 +60,12 @@ class Element:
         del self.__rank
 
     def mutate(self, mask):
-        mutation_minimum = min(self.permutations)
-        mutation_maximum = max(self.permutations)
-        mutation_size = len(self.permutations)
+        mutation_minimum = min(self.chromosomes)
+        mutation_maximum = max(self.chromosomes)
+        mutation_size = len(self.chromosomes)
 
         mutation_values = np.random.randint(low=mutation_minimum,
                                             high=mutation_maximum,
                                             size=mutation_size)
 
-        self.permutations[mask] = mutation_values[mask]
+        self.chromosomes[mask] = mutation_values[mask]

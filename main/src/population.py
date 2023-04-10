@@ -87,7 +87,7 @@ class Population:
 
     def calculate_distances(self):
         for element in self.elements:
-            points_new = self.points[element.permutations]
+            points_new = self.points[element.chromosomes]
             distances = [_distance(p1, p2) for p1, p2 in zip(points_new[:-1], points_new[1:])]
             distances = distances + [_distance(points_new[-1], points_new[0])]
             element.distance = sum(distances)
@@ -183,8 +183,8 @@ class Population:
 
         children = []
         for first, second in zip(self.__first_parents, self.__second_parents):
-            first_child, second_child = crossover_function(self.elements[first].permutations,
-                                                           self.elements[second].permutations,
+            first_child, second_child = crossover_function(self.elements[first].chromosomes,
+                                                           self.elements[second].chromosomes,
                                                            crossover_point)
 
             children.append(first_child)
@@ -192,8 +192,8 @@ class Population:
 
         if keep_parents is not None:
             parents = [element for element in self.elements]
-            parents_permutations = [element.permutations for element in np.random.choice(parents, size=keep_parents)]
-            children = children + parents_permutations
+            parents_chromosomes = [element.chromosomes for element in np.random.choice(parents, size=keep_parents)]
+            children = children + parents_chromosomes
 
         return children
 

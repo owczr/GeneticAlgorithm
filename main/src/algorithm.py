@@ -5,17 +5,6 @@ from .utils import set_seeds, X_LIM, Y_LIM, POINTS_NO, POPULATION_SIZE
 from .population import Population
 
 
-# TODO: Generate new population
-# TODO: Calculate distances
-# TODO: Retain elite, select parents
-# TODO:     Selection method: rank, roulette
-# TODO: Create new population
-# TODO: Early stopping
-# TODO:     When no improvement increase mutation
-# TOD0: At least 1000 times
-# TODO: Visualization
-
-
 def run():
     best_distances = []
     minimal_mutation_probability = 0.01
@@ -55,8 +44,10 @@ def run():
         # Mutate elements
         population.mutate()
 
+    return best_distances
 
-def increase_mutation(population, best_distances, minimal_mutation_probability, strenght=2, patience=7):
+
+def increase_mutation(population, best_distances, minimal_mutation_probability, strength=2, patience=7):
     mutation_probability = population.mutation_probability
     if len(best_distances) < patience:
         return mutation_probability
@@ -64,9 +55,9 @@ def increase_mutation(population, best_distances, minimal_mutation_probability, 
     last_distances = best_distances[-patience:]
 
     if all(np.array(last_distances) == last_distances[0]):
-        mutation_probability *= strenght
+        mutation_probability *= strength
     else:
-        decreased_mutation_probability = mutation_probability / strenght
+        decreased_mutation_probability = mutation_probability / strength
 
         if decreased_mutation_probability > minimal_mutation_probability:
             mutation_probability = decreased_mutation_probability

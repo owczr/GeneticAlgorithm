@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 from scipy.stats import rankdata
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 from .element import Element
 
@@ -33,6 +33,8 @@ class Population:
         self.__size = population_size
         self.__points = points
         self.__points_count = points_count
+        self.__first_parents = None  # Indexes of parent population created during selection
+        self.__second_parents = None
 
     @property
     def elements(self):
@@ -91,7 +93,11 @@ class Population:
         else:
             raise NameError(f"Method {method} not supported")
 
+        self.__create_parent_indexes()
+
     def __select_by_rank(self):
+        """Selection by rank.
+         Here the rank is the probability of transitioning to the paren population"""
         index = 0
         for probability in np.random.random(self.__size):
             if probability > self.elements[index].rank:
@@ -106,11 +112,27 @@ class Population:
         distances = [element.distance for element in self.elements]
         ranks = len(distances) - rankdata(distances)
 
-        scaler = MinMaxScaler(feature_range=(0, 1))
-        ranks_std = scaler.fit_transform(np.array(ranks).reshape(-1, 1))
+        # Both scalers standardize ranks as probabilities that sum up to 1
+        min_max_scaler = MinMaxScaler()
+        ranks_norm = min_max_scaler.fit_transform(np.array(ranks).reshape(-1, 1))
 
-        for element, rank in zip(self.elements, ranks_std):
-            element.rank = rank
+        for element, rank in zip(self.elements, ranks_norm):
+            element.rank = rank[0]
+
+    def __create_parent_indexes(self):
+        element_lenght = len(self.elements)
+
+        indexes = np.arange(element_lenght)
+
+        ranks = np.array([element.rank for element in self.elements])
+
+        ranks_norm = ranks / sum(ranks)
+
+        first_parent_indexes = np.random.choice(indexes, size=element_lenght, p=ranks_norm)
+        second_parent_indexes = np.random.choice(indexes, size=element_lenght, p=ranks_norm)
+
+        self.__first_parents = first_parent_indexes
+        self.__second_parents = second_parent_indexes
 
     @staticmethod
     def __one_point_crossover(first_parent, second_parent, point):

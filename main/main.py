@@ -19,12 +19,15 @@ def main():
     population.select_elite()
 
     # Create children elements
-    children = population.crossover(keep_parents=True)
+    children_permutations = population.crossover(keep_parents=True)
 
     # Create new Population object
-    population = Population(children, utils.POINTS_NO, points_list)
+    children_elements = Population.generate_elements(children_permutations)
+    population = Population(children_elements, utils.POINTS_NO, points_list)
 
-    print(population.elements)
+    # Mutate elements
+    population.mutate()
+
     # for prob, dist, pop in zip(probabilities, distance_list, population):
     #     print(prob, sum(dist), pop)
 

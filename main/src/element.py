@@ -1,4 +1,5 @@
 """Class for single member of a population"""
+import numpy as np
 
 
 class Element:
@@ -57,3 +58,14 @@ class Element:
     @rank.deleter
     def rank(self):
         del self.__rank
+
+    def mutate(self, mask):
+        mutation_minimum = min(self.permutations)
+        mutation_maximum = max(self.permutations)
+        mutation_size = len(self.permutations)
+
+        mutation_values = np.random.randint(low=mutation_minimum,
+                                            high=mutation_maximum,
+                                            size=mutation_size)
+
+        self.permutations[mask] = mutation_values[mask]

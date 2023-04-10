@@ -8,7 +8,6 @@ Y_LIM = (0, 300)
 POINTS_NO = 30
 SEED = 42
 POPULATION_SIZE = 1000
-MUTATION_PROBA = 0
 
 
 def set_seeds():

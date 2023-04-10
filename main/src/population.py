@@ -28,6 +28,8 @@ def _distance(point_1, point_2):
 
 
 class Population:
+    mutation_probability = 0.01
+
     def __init__(self, elements, points_count, points):
         self.__elements = elements
         self.__size = len(elements)
@@ -58,9 +60,10 @@ class Population:
         elements = [Element(np.random.permutation(points_count)) for _ in range(population_size)]
         return elements
 
-    @classmethod
-    def generate_population(cls, probabilities, population_list):
-        pass
+    @staticmethod
+    def generate_elements(permutations):
+        elements = [Element(permutation) for permutation in permutations]
+        return elements
 
     @property
     def points(self):
@@ -155,6 +158,15 @@ class Population:
 
         return first_child, second_child
 
+    def mutate(self):
+        size = self.__points_count
+        mutation_probabilities = [self.mutation_probability] * size
+        for index in range(len(self.elements)):
+            mutation = np.random.random(size)
+            mask = mutation < mutation_probabilities
+            if sum(mask) > 1:
+                self.elements[index].mutate(mask)
+
     def crossover(self, keep_parents=False, two_point=False):
         element_length = len(self.elements[0])
 
@@ -167,9 +179,12 @@ class Population:
 
         children = []
         for first, second in zip(self.__first_parents, self.__second_parents):
-            children.append(crossover_function(self.elements[first].permutations,
-                                               self.elements[second].permutations,
-                                               crossover_point))
+            first_child, second_child = crossover_function(self.elements[first].permutations,
+                                                           self.elements[second].permutations,
+                                                           crossover_point)
+
+            children.append(first_child)
+            children.append(second_child)
 
         if keep_parents:
             children = children + [element.permutations for element in self.elements]

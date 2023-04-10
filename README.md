@@ -1,6 +1,6 @@
 # Genetic Algorithm
 
-![plot](https://github.com/owczr/GeneticAlgorithm/tree/main/img.png?raw=true)
+![plot](https://github.com/owczr/GeneticAlgorithm/blob/main/img.png)
 
 ## About
 This program visualizes how a Genetic Algorithm decreases target function, in this example distance between points.

@@ -7,17 +7,6 @@ from sklearn.preprocessing import MinMaxScaler
 from .element import Element
 
 
-# TODO: Generate new population
-# TODO: Calculate distances
-# TODO: Retain elite, select parents
-# TODO:     Selection method: rank, roulette
-# TODO: Create new population
-# TODO: Early stopping
-# TODO:     When no improvement increase mutation
-# TOD0: At least 1000 times
-# TODO: Visualization
-
-
 def _distance(point_1, point_2):
     x_1 = point_1[0]
     y_1 = point_1[1]
@@ -146,7 +135,7 @@ class Population:
 
         ranks_norm = ranks / sum(ranks)
 
-        if limit and self.__size > limit:
+        if limit is not None and self.__size > limit:
             size = limit
         else:
             size = self.__size
@@ -205,3 +194,7 @@ class Population:
             children = children + [element.permutations for element in self.elements]
 
         return children
+
+    def best_distance(self):
+        distances = [element.distance for element in self.elements]
+        return sorted(distances)[0]

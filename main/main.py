@@ -5,10 +5,13 @@ if __name__ == "__main__":
     utils.set_seeds()
     points = points.generate(utils.X_LIM, utils.Y_LIM, utils.POINTS_NO)
 
-    population = Population(10, utils.POINTS_NO, points)
+    # Generate initial population
+    initial_population = Population.generate_first(10, utils.POINTS_NO)
+
+    population = Population(initial_population, utils.POINTS_NO, points)
     population.calculate_distances()
 
-    population.select_elite(limit=1)
+    population.select_elite()
 
     print(len(population.crossover(keep_parents=True)))
 
@@ -21,5 +24,3 @@ if __name__ == "__main__":
     # points.plot(axs, utils.X_LIM, utils.Y_LIM, points_list)
     #
     # plt.show()
-
-#%%

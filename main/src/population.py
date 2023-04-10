@@ -28,9 +28,10 @@ def _distance(point_1, point_2):
 
 
 class Population:
-    def __init__(self, population_size, points_count, points):
-        self.__elements = self.__generate_first(population_size, points_count)
-        self.__size = population_size
+    def __init__(self, elements, points_count, points):
+        # self.__elements = self.__generate_first(population_size, points_count)
+        self.__elements = elements
+        self.__size = len(elements)
         self.__points = points
         self.__points_count = points_count
         self.__first_parents = None  # Indexes of parent population created during selection
@@ -52,8 +53,8 @@ class Population:
     def elements(self):
         del self.__elements
 
-    @classmethod
-    def __generate_first(cls, population_size: int, points_count: int) -> list:
+    @staticmethod
+    def generate_first(population_size: int, points_count: int) -> list:
         elements = [Element(np.random.permutation(points_count)) for _ in range(population_size)]
         return elements
 

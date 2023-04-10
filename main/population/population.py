@@ -160,16 +160,13 @@ class Population:
             crossover_point = np.random.randint(1, element_lenght)
             crossover_function = self.__one_point_crossover
 
-        first_parent_indexes = np.random.randint(0, len(self.elements), element_lenght)
-        second_parent_indexes = np.random.randint(0, len(self.elements), element_lenght)
-
         children = []
-        for first, second in zip(first_parent_indexes, second_parent_indexes):
+        for first, second in zip(self.__first_parents, self.__second_parents):
             children.append(crossover_function(self.elements[first].permutations,
                                                self.elements[second].permutations,
                                                crossover_point))
 
         if keep_parents:
-            children = children + self.elements
+            children = children + [element.permutations for element in self.elements]
 
         return children

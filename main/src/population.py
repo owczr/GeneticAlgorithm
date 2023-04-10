@@ -200,3 +200,9 @@ class Population:
     def best_distance(self):
         distances = [element.distance for element in self.elements]
         return sorted(distances)[0]
+
+    def best_chromosome(self):
+        best_distance = self.best_distance()
+        for element in self.elements:
+            if element.distance == best_distance:
+                return element.chromosomes

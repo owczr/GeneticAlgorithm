@@ -7,6 +7,7 @@ from .population import Population
 
 def run():
     best_distances = []
+    best_chromosomes = []
     minimal_mutation_probability = 0.01
     set_seeds()
     points = generate(X_LIM, Y_LIM, POINTS_NO)
@@ -24,6 +25,10 @@ def run():
         # Get the best element distance
         best_distance = population.best_distance()
         best_distances.append(best_distance)
+
+        # Get the best chromosomes
+        best_chromosome = population.best_chromosome()
+        best_chromosomes.append(best_chromosome)
 
         # Check for improvement
         # If none increase mutation
@@ -44,7 +49,7 @@ def run():
         # Mutate elements
         population.mutate()
 
-    return best_distances
+    return best_distances, best_chromosomes
 
 
 def increase_mutation(population, best_distances, minimal_mutation_probability, strength=2, patience=7):

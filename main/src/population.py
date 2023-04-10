@@ -123,9 +123,9 @@ class Population:
             element.rank = rank[0]
 
     def __create_parent_indexes(self, limit=None):
-        element_lenght = len(self.elements)
+        element_length = len(self.elements)
 
-        indexes = np.arange(element_lenght)
+        indexes = np.arange(element_length)
 
         ranks = np.array([element.rank for element in self.elements])
 

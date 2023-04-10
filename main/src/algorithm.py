@@ -1,3 +1,5 @@
+import numpy as np
+
 from .points import generate
 from .utils import set_seeds, X_LIM, Y_LIM, POINTS_NO, POPULATION_SIZE
 from .population import Population
@@ -15,6 +17,8 @@ from .population import Population
 
 
 def run():
+    best_distances = []
+
     set_seeds()
     points = generate(X_LIM, Y_LIM, POINTS_NO)
 
@@ -24,14 +28,17 @@ def run():
     # Create Population object
     population = Population(initial_population, POINTS_NO, points)
 
-    for i in range(100):
+    while True:
         # Calculate distances
         population.calculate_distances()
 
         # Get the best element distance
         best_distance = population.best_distance()
-        print(best_distance)
+        best_distances.append(best_distance)
 
+        # Check for improvement
+        if early_stopping(best_distances):
+            break
         # Select best elements
         population.select_elite(limit=POPULATION_SIZE, method="roulette")
 
@@ -45,6 +52,13 @@ def run():
         # Mutate elements
         population.mutate()
 
-        print(len(population.elements))
 
+def early_stopping(best_distances, patience=5):
+    if len(best_distances) < patience:
+        return False
 
+    last_distances = best_distances[-patience:]
+
+    if all(np.array(last_distances) == last_distances[0]):
+        return True
+    return False

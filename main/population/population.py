@@ -113,21 +113,38 @@ class Population:
             element.rank = rank
 
     @staticmethod
-    def __crossover(first_parent, second_parent, point):
-        first_child = np.concatenate((first_parent[point:], second_parent[:point]))
-        second_child = np.concatenate((second_parent[point:], first_parent[:point]))
+    def __one_point_crossover(first_parent, second_parent, point):
+        first_child = np.concatenate((first_parent[:point], second_parent[point:]))
+        second_child = np.concatenate((second_parent[:point], first_parent[point:]))
+
+        return first_child, second_child
+
+    @staticmethod
+    def __two_point_crossover(first_parent, second_parent, points):
+        p1, p2 = points
+
+        first_child = np.concatenate((first_parent[:p1], second_parent[p1:p2], first_parent[p2:]))
+        second_child = np.concatenate((second_parent[:p1], first_parent[p1:p2], second_parent[p2:]))
+
         return first_child, second_child
 
     def crossover(self, keep_parents=True, two_point=False):
         element_lenght = len(self.elements[0])
-        crossover_point = np.random.randint(0, element_lenght)
+
+        if two_point:
+            crossover_point = sorted(np.random.randint(1, element_lenght, 2))
+            crossover_function = self.__two_point_crossover
+        else:
+            crossover_point = np.random.randint(1, element_lenght)
+            crossover_function = self.__one_point_crossover
+
         first_parent_indexes = np.random.randint(0, len(self.elements), element_lenght)
         second_parent_indexes = np.random.randint(0, len(self.elements), element_lenght)
 
         children = []
         for first, second in zip(first_parent_indexes, second_parent_indexes):
-            children.append(self.__crossover(self.elements[first].permutations,
-                                             self.elements[second].permutations,
-                                             crossover_point))
+            children.append(crossover_function(self.elements[first].permutations,
+                                               self.elements[second].permutations,
+                                               crossover_point))
 
         return children

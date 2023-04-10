@@ -171,7 +171,7 @@ class Population:
             if sum(mask) > 1:
                 self.elements[index].mutate(mask)
 
-    def crossover(self, keep_parents=False, two_point=False):
+    def crossover(self, keep_parents=None, two_point=False):
         element_length = len(self.elements[0])
 
         if two_point:
@@ -190,8 +190,10 @@ class Population:
             children.append(first_child)
             children.append(second_child)
 
-        if keep_parents:
-            children = children + [element.permutations for element in self.elements]
+        if keep_parents is not None:
+            parents = [element for element in self.elements]
+            parents_permutations = [element.permutations for element in np.random.choice(parents, size=keep_parents)]
+            children = children + parents_permutations
 
         return children
 

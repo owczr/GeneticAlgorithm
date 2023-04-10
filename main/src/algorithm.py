@@ -36,7 +36,7 @@ def run():
         population.select_elite(limit=POPULATION_SIZE, method="roulette")
 
         # Create children elements
-        children_permutations = population.crossover(keep_parents=True)
+        children_permutations = population.crossover(keep_parents=POPULATION_SIZE)
 
         # Create new Population object
         children_elements = Population.generate_elements(children_permutations)

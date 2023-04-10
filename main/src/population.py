@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 from scipy.stats import rankdata
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler
 
 from .element import Element
 

@@ -1,11 +1,5 @@
-import math
-
-import matplotlib.pyplot as plt
-
-import utils
-from points import points
-from population.population import Population
-
+from src import points, utils
+from src.population import Population
 
 if __name__ == "__main__":
     utils.set_seeds()

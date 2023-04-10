@@ -128,7 +128,7 @@ class Population:
 
         return first_child, second_child
 
-    def crossover(self, keep_parents=True, two_point=False):
+    def crossover(self, keep_parents=False, two_point=False):
         element_lenght = len(self.elements[0])
 
         if two_point:
@@ -146,5 +146,8 @@ class Population:
             children.append(crossover_function(self.elements[first].permutations,
                                                self.elements[second].permutations,
                                                crossover_point))
+
+        if keep_parents:
+            children = children + self.elements
 
         return children

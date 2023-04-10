@@ -17,12 +17,12 @@ def _distance(point_1, point_2):
 
 
 class Population:
-    def __init__(self, elements, points_count, points):
+    def __init__(self, elements, points_count, points, mutation_probability):
         self.__elements = elements
         self.__size = len(elements)
         self.__points = points
         self.__points_count = points_count
-        self.__mutation_probability = 0.01
+        self.__mutation_probability = mutation_probability
         # Indexes of parent population created during selection
         self.__first_parents = None
         self.__second_parents = None

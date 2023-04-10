@@ -84,7 +84,7 @@ class Population:
             distances = distances + [_distance(points_new[-1], points_new[0])]
             element.distance = sum(distances)
 
-    def select_elite(self, method="rank"):
+    def select_elite(self, method="rank", limit=None):
         self.__set_ranks()
         if method == "rank":
             self.__select_by_rank()
@@ -93,7 +93,7 @@ class Population:
         else:
             raise NameError(f"Method {method} not supported")
 
-        self.__create_parent_indexes()
+        self.__create_parent_indexes(limit)
 
     def __select_by_rank(self):
         """Selection by rank.
@@ -112,14 +112,13 @@ class Population:
         distances = [element.distance for element in self.elements]
         ranks = len(distances) - rankdata(distances)
 
-        # Both scalers standardize ranks as probabilities that sum up to 1
         min_max_scaler = MinMaxScaler()
         ranks_norm = min_max_scaler.fit_transform(np.array(ranks).reshape(-1, 1))
 
         for element, rank in zip(self.elements, ranks_norm):
             element.rank = rank[0]
 
-    def __create_parent_indexes(self):
+    def __create_parent_indexes(self, limit=None):
         element_lenght = len(self.elements)
 
         indexes = np.arange(element_lenght)
@@ -128,8 +127,13 @@ class Population:
 
         ranks_norm = ranks / sum(ranks)
 
-        first_parent_indexes = np.random.choice(indexes, size=element_lenght, p=ranks_norm)
-        second_parent_indexes = np.random.choice(indexes, size=element_lenght, p=ranks_norm)
+        if limit and self.__size > limit:
+            size = limit
+        else:
+            size = self.__size
+
+        first_parent_indexes = np.random.choice(indexes, size=size, p=ranks_norm)
+        second_parent_indexes = np.random.choice(indexes, size=size, p=ranks_norm)
 
         self.__first_parents = first_parent_indexes
         self.__second_parents = second_parent_indexes

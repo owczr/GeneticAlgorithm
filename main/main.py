@@ -8,9 +8,9 @@ if __name__ == "__main__":
     population = Population(10, utils.POINTS_NO, points)
     population.calculate_distances()
 
-    population.select_elite()
+    population.select_elite(limit=1)
 
-    print(population.crossover(keep_parents=True))
+    print(len(population.crossover(keep_parents=True)))
 
     # for prob, dist, pop in zip(probabilities, distance_list, population):
     #     print(prob, sum(dist), pop)

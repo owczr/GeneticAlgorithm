@@ -18,30 +18,14 @@ def _distance(point_1, point_2):
 
 class Population:
     def __init__(self, elements, points_count, points, mutation_probability):
-        self.__elements = elements
-        self.__size = len(elements)
-        self.__points = points
-        self.__points_count = points_count
-        self.__mutation_probability = mutation_probability
+        self.elements = elements
+        self.size = len(elements)
+        self.points = points
+        self.points_count = points_count
+        self.mutation_probability = mutation_probability
         # Indexes of parent population created during selection
-        self.__first_parents = None
-        self.__second_parents = None
-
-    @property
-    def elements(self):
-        return self.__elements
-
-    @elements.setter
-    def elements(self, elements):
-        self.__elements = elements
-
-    @elements.getter
-    def elements(self):
-        return self.__elements
-
-    @elements.deleter
-    def elements(self):
-        del self.__elements
+        self.first_parents = None
+        self.second_parents = None
 
     @staticmethod
     def generate_first(population_size: int, points_count: int) -> list:
@@ -52,38 +36,6 @@ class Population:
     def generate_elements(permutations):
         elements = [Element(permutation) for permutation in permutations]
         return elements
-
-    @property
-    def points(self):
-        return self.__points
-
-    @points.setter
-    def points(self, points):
-        self.__points = points
-
-    @points.getter
-    def points(self):
-        return self.__points
-
-    @points.deleter
-    def points(self):
-        del self.__points
-
-    @property
-    def mutation_probability(self):
-        return self.__mutation_probability
-
-    @mutation_probability.setter
-    def mutation_probability(self, mutation_probability):
-        self.__mutation_probability = mutation_probability
-
-    @mutation_probability.getter
-    def mutation_probability(self):
-        return self.__mutation_probability
-
-    @mutation_probability.deleter
-    def mutation_probability(self):
-        del self.__mutation_probability
 
     def calculate_distances(self):
         for element in self.elements:
@@ -109,7 +61,7 @@ class Population:
     def __selection(self):
         """Here the rank is the probability of transitioning to the parent population"""
         new_elements = []
-        for probability, element in zip(np.random.random(self.__size), self.elements):
+        for probability, element in zip(np.random.random(self.size), self.elements):
             if probability <= element.rank:
                 new_elements.append(element)
         self.elements = new_elements
@@ -134,10 +86,10 @@ class Population:
 
         ranks_norm = ranks / sum(ranks)
 
-        if limit is not None and self.__size > limit:
+        if limit is not None and self.size > limit:
             size = limit
         else:
-            size = self.__size
+            size = self.size
 
         first_parent_indexes = np.random.choice(indexes, size=size, p=ranks_norm)
         second_parent_indexes = np.random.choice(indexes, size=size, p=ranks_norm)
@@ -169,7 +121,7 @@ class Population:
             return False
 
     def mutate(self):
-        size = self.__points_count
+        size = self.points_count
         mutation_probabilities = [self.mutation_probability] * size
 
         for index in range(len(self.elements)):
